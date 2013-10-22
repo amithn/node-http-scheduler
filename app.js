@@ -25,32 +25,15 @@ app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-// create the desired schedule
-var sched = later.parse.cron('15 23 * * ? *');
+app.get('/hello', function(req, res) {
+    res.render('index');
+});
 
-// calculate the next 5 occurrences using local time
-later.date.localTime();
-var results = later.schedule(sched).next(1);
-
-if(results.length > 0) {
-    console.log("Results : \n" + results.join('\n'));
-} else {
-    var nextDate = new Date(results);
-    var diff = new Date();
-    console.log("Date is " +  (new Number(nextDate.getTime() - diff.getTime())/(1000 * 60 * 60)));
-    console.log("Results : \n" + results);
-}
-
-app.get('/', routes.index);
-app.get('/users', user.list);
-
-//http.createServer(app).listen(app.get('port'), function(){
-//  console.log('Express server listening on port ' + app.get('port'));
-//});
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
